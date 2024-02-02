@@ -1,0 +1,28 @@
+#!/bin/sh
+#
+# Start the wifi...
+#
+
+case "$1" in
+  start)
+
+        echo "Starting wifi ......"
+        /mnt/data/bin/wifi_start.sh &
+		;;
+  stop)
+        printf "Stopping wifi..."
+	/usr/bin/killall wpa_supplicant hostapd dhcpd
+	/sbin/ifconfig wlan0 down
+	/sbin/modprobe -r mt7601Usta.ko
+        ;;
+  restart|reload)
+        "$0" stop
+        "$0" start
+        ;;
+  *)
+        echo "Usage: $0 {start|stop|restart}"
+        exit 1
+esac
+
+exit $?
+

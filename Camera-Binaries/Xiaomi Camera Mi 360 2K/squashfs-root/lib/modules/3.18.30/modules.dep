@@ -1,0 +1,13 @@
+kernel/fs/nfs_common/grace.ko:
+kernel/fs/nls/nls_utf8.ko:
+kernel/fs/nfs/nfs.ko: kernel/fs/lockd/lockd.ko kernel/fs/nfs_common/grace.ko kernel/net/sunrpc/sunrpc.ko
+kernel/fs/nfs/nfsv2.ko: kernel/fs/nfs/nfs.ko kernel/fs/lockd/lockd.ko kernel/fs/nfs_common/grace.ko kernel/net/sunrpc/sunrpc.ko
+kernel/fs/lockd/lockd.ko: kernel/fs/nfs_common/grace.ko kernel/net/sunrpc/sunrpc.ko
+kernel/fs/ntfs/ntfs.ko:
+kernel/drivers/misc/eeprom/at24.ko:
+kernel/drivers/misc/eeprom/eeprom.ko:
+kernel/drivers/staging/android/binder.ko:
+kernel/drivers/mstar/clk/ms_usclk.ko:
+kernel/net/sunrpc/sunrpc.ko:
+wireless/mt7601Usta.ko: wireless/mtprealloc.ko
+wireless/mtprealloc.ko:

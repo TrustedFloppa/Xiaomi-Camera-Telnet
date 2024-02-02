@@ -1,0 +1,22 @@
+# Aliases extracted from modules themselves.
+alias fs-nfs nfs
+alias fs-ntfs ntfs
+alias i2c:at24 at24
+alias i2c:24c1024 at24
+alias i2c:24c512 at24
+alias i2c:24c256 at24
+alias i2c:24c128 at24
+alias i2c:24c64 at24
+alias i2c:24c32 at24
+alias i2c:24c16 at24
+alias i2c:24c08 at24
+alias i2c:24c04 at24
+alias i2c:spd at24
+alias i2c:24c02 at24
+alias i2c:24c01 at24
+alias i2c:24c00 at24
+alias rpc_pipefs sunrpc
+alias fs-rpc_pipefs sunrpc
+alias usb:v148Fp7601d*dc*dsc*dp*ic*isc*ip*in* mt7601Usta
+alias usb:v148Fp6370d*dc*dsc*dp*ic*isc*ip*in* mt7601Usta
+alias usb:v148Fp7650d*dc*dsc*dp*ic*isc*ip*in* mt7601Usta

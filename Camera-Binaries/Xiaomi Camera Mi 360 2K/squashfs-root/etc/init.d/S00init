@@ -1,0 +1,160 @@
+#!/bin/sh
+
+[ ! -d /system ] && mkdir /system
+ln -s /bin /system/bin
+ln -s /etc /system/etc
+ln -s /lib /system/lib
+
+mkdir /dev/socket
+
+mknod /dev/snd/dmaC000p       c 250   0 -m 555
+mknod /dev/snd/pcmC000c       c 116  24 -m 555
+mknod /dev/snd/pcmC000p       c 116  16 -m 555
+
+export PS1='[\w]## '
+
+property_service&
+ueventd&
+
+### param
+## TCP/IP configuration
+echo 163840 > /proc/sys/net/core/rmem_max
+echo 512000 > /proc/sys/net/core/wmem_max
+echo 163840 > /proc/sys/net/core/rmem_default
+echo 256000 > /proc/sys/net/core/wmem_default
+echo '924 1232 1848' > /proc/sys/net/ipv4/tcp_mem
+echo '4096 87380 325120' > /proc/sys/net/ipv4/tcp_rmem
+echo '4096 16384 325120' > /proc/sys/net/ipv4/tcp_wmem
+
+
+#echo /ext/core.%e.%t > /proc/sys/kernel/core_pattern
+echo 2 > /sys/class/mstar/mvhe/rct
+#echo 3 > /sys/class/mstar/mmfe/rct
+echo 1 > /sys/class/mstar/msys/dmem_realloc
+#disable overcommit
+echo 2 > /proc/sys/vm/overcommit_memory
+echo 100 > /proc/sys/vm/overcommit_ratio
+
+
+#close vsrc log
+setprop mstar.omx.log.filter.vmfe 1
+
+
+# SW OSD  ; 32 align privacy mask
+setprop mi.osd.gop.use 0
+
+# SW OSD  ; general privacy mask but more memory
+# setprop mi.osd.gop.use 2
+# setprop mi.osd.stretch 2
+
+### MSC313E
+setprop mi.vi.src 2
+setprop mi.vi.img.sub 0
+setprop mi.sys.shrink_mem 1
+setprop mi.venc.bufcnt 1
+setprop mi.venc.sub.bufcnt 1
+setprop mi.vi.bufcnt 2
+setprop mi.vi.sub.bufcnt 2
+setprop mi.vi.sub.width 640
+setprop mi.vi.sub.height 360
+
+setprop mi.venc.bufratio 40
+setprop mi.venc.img.bufratio 40
+
+setprop mstar.omx.avqe.aecmode 7
+setprop mstar.omx.avqe.aecgain 20
+
+echo 163840 > /proc/sys/net/core/rmem_max
+echo 512000 > /proc/sys/net/core/wmem_max
+echo 163840 > /proc/sys/net/core/rmem_default
+echo 256000 > /proc/sys/net/core/wmem_default
+echo '924 1232 1848' > /proc/sys/net/ipv4/tcp_mem
+echo '4096 87380 325120' > /proc/sys/net/ipv4/tcp_rmem
+echo '4096 16384 325120' > /proc/sys/net/ipv4/tcp_wmem
+
+ #cat dmem,total 0x011225C0 ~ 18M
+/bin/dmem -req 0x0001E000 VENC-49
+/bin/dmem -req 0x0001E000 VENC-48
+/bin/dmem -req 0x000CC000 VENC-32
+
+/bin/dmem -req 0x00069AE0 S1:VENCDMP1
+/bin/dmem -req 0x00069AE0 S1:VENCDMP0
+/bin/dmem -req 0x0000A100 S1:VENCDMOUT
+/bin/dmem -req 0x0007F800 S0:VENCDMP1
+/bin/dmem -req 0x0007F800 S0:VENCDMP0
+/bin/dmem -req 0x0000A800 S0:VENCDMOUT
+
+/bin/dmem -req 0x00016800 VSPL-I0P3B0
+/bin/dmem -req 0x0005A000 VSPL-I0P2B1
+/bin/dmem -req 0x0005A000 VSPL-I0P2B0
+
+/bin/dmem -req 0x0005A000 VSPL-I0P1B1
+/bin/dmem -req 0x0005A000 VSPL-I0P1B0
+
+/bin/dmem -req 0x0005A000 VSPL-I0P0B1
+/bin/dmem -req 0x0005A000 VSPL-I0P0B0
+
+/bin/dmem -req 0x00357000 MS-01
+/bin/dmem -req 0x00357000 MS-00
+
+/bin/dmem -req 0x000FF000 SCL_MCNR_M
+/bin/dmem -req 0x003FC000 SCL_MCNR_YC
+
+
+echo "VENC-49" > /sys/class/mstar/msys/fixed_dmem
+echo "VENC-48" > /sys/class/mstar/msys/fixed_dmem
+echo "VENC-32" > /sys/class/mstar/msys/fixed_dmem
+
+echo "S1:VENCDMP1" > /sys/class/mstar/msys/fixed_dmem
+echo "S1:VENCDMP0" > /sys/class/mstar/msys/fixed_dmem
+echo "S1:VENCDMOUT" > /sys/class/mstar/msys/fixed_dmem
+echo "S0:VENCDMP1" > /sys/class/mstar/msys/fixed_dmem
+echo "S0:VENCDMP0" > /sys/class/mstar/msys/fixed_dmem
+echo "S0:VENCDMOUT" > /sys/class/mstar/msys/fixed_dmem
+
+echo "VSPL-I0P3B0" > /sys/class/mstar/msys/fixed_dmem
+echo "VSPL-I0P2B1" > /sys/class/mstar/msys/fixed_dmem
+echo "VSPL-I0P2B0" > /sys/class/mstar/msys/fixed_dmem
+echo "VSPL-I0P1B1" > /sys/class/mstar/msys/fixed_dmem
+echo "VSPL-I0P1B0" > /sys/class/mstar/msys/fixed_dmem
+echo "VSPL-I0P0B1" > /sys/class/mstar/msys/fixed_dmem
+echo "VSPL-I0P0B0" > /sys/class/mstar/msys/fixed_dmem
+
+echo "MS-01" > /sys/class/mstar/msys/fixed_dmem
+echo "MS-00" > /sys/class/mstar/msys/fixed_dmem
+
+echo "SCL_MCNR_M" > /sys/class/mstar/msys/fixed_dmem
+echo "SCL_MCNR_YC" > /sys/class/mstar/msys/fixed_dmem
+
+echo 1 > /sys/class/mstar/msys/fixed_dmem
+echo 0 > /sys/class/mstar/msys/dmem_realloc
+
+ulimit -c unlimited
+#echo /ext/core.%e.%t > /proc/sys/kernel/core_pattern
+echo 2 > /sys/class/mstar/mvhe/rct
+#echo 3 > /sys/class/mstar/mmfe/rct
+echo 1 > /sys/class/mstar/msys/dmem_realloc
+#disable overcommit
+
+ulimit -s 256
+echo 0 > /proc/sys/vm/overcommit_memory
+echo 100 > /proc/sys/vm/overcommit_ratio
+echo 598 > /proc/sys/vm/min_free_kbytes
+echo 0 > /proc/sys/vm/admin_reserve_kbytes
+echo 0 > /proc/sys/vm/user_reserve_kbytes
+
+echo D > /sys/class/mstar/mhvsp1/fbmg
+echo 9 > /sys/class/mstar/mhvsp1/fbmg
+
+sysctl -w net.ipv4.ip_local_reserved_ports=54322,54321,54320
+
+
+languages=`factory get language`
+if [ "$languages" = "en" ]; then
+		ln -sf /mnt/data/data/font/mi_logo16.1555 /mnt/data/data/font/logo16.1555
+		ln -sf /mnt/data/data/font/mi_logo48.1555 /mnt/data/data/font/logo48.1555	
+else
+		ln -sf /mnt/data/data/font/mijia_logo16.1555 /mnt/data/data/font/logo16.1555
+		ln -sf /mnt/data/data/font/mijia_logo48.1555 /mnt/data/data/font/logo48.1555
+fi
+

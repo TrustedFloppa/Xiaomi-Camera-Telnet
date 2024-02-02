@@ -1,0 +1,64 @@
+#!/bin/sh 
+
+#must to verify the sdcard
+
+MANUFA="/mnt/sdcard/manu_test"
+MANUFA_BIN="/mnt/sdcard/manu_test/manu.bin"
+MANUFA_DAT="/mnt/sdcard/manu_test/md5sum.dat"
+TMP_BIN="/tmp/manu.bin"
+TMP_DAT="/tmp/md5sum.dat"
+
+
+try_ft_mode()
+{
+	if [ -f "${MANUFA_DAT}" ];
+	then
+		rm -rf /tmp/manu_test
+		rm -fr ${TMP_BIN}
+		rm -fr ${TMP_DAT}
+		echo "md5sum.dat"
+		# openssl smime -decrypt -in "$MANUFA_DAT" -binary -inform DEM -inkey /mnt/data/data/cfg/public-key.pem -out "$MANUFA_BIN"
+		#openssl rsautl -sign -in "$MANUFA_DAT" -inkey RSA.pem  -passin pass:123456 -out "$MANUFA_BIN"
+		cp ${MANUFA_BIN} /tmp/
+		cp ${MANUFA_DAT} /tmp/
+		cd /tmp/
+		rm -fr md5sum1.txt
+		openssl rsautl -verify -in "${TMP_DAT}" -inkey /mnt/data/data/cfg/public-key.pem -pubin -out md5sum1.txt
+		fact_md5=`md5sum -c md5sum1.txt`
+		if [ "${fact_md5}" = "manu.bin: OK" ] ; then
+			echo "md5 ok"
+			rm -fr ${TMP_BIN}
+			tar -xf "${MANUFA_BIN}" -C /tmp/
+			cd /tmp/manu_test/
+			/tmp/manu_test/manu.sh
+			return 0
+		else
+			echo "md5 fail"
+		fi
+	fi
+	return 1
+}
+
+case "$1" in
+	start)
+		mount /dev/mmcblk0p1 /mnt/sdcard || mount /dev/mmcblk0 /mnt/sdcard || exit $?
+		if try_ft_mode; then
+			touch /tmp/factory_mode
+		else 
+			umount /mnt/sdcard
+		fi
+		;;
+	stop)
+		echo "do nothing"
+		;;
+	restart|reload)
+		"$0" stop
+		"$0" start
+		;;
+	*)
+		echo "Usage: $0 {start|top|restart}"
+		exit 1
+esac
+
+exit $?
+

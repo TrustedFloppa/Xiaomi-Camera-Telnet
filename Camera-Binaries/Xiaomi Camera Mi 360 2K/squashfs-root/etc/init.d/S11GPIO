@@ -1,0 +1,30 @@
+#!/bin/sh
+#ircut switch to day
+echo 98 > /sys/class/gpio/export
+echo 99 > /sys/class/gpio/export
+echo out > /sys/class/gpio/gpio98/direction
+echo out > /sys/class/gpio/gpio99/direction
+echo 0 > /sys/class/gpio/gpio98/value
+echo 1 > /sys/class/gpio/gpio99/value
+
+
+echo 100 > /sys/class/gpio/export
+echo out > /sys/class/gpio/gpio100/direction
+echo 1 > /sys/class/gpio/gpio100/value
+
+# set pwm0, period 12KHZ. default disable
+echo 0 > /sys/class/pwm/pwmchip0/export
+echo 120000 > /sys/class/pwm/pwmchip0/pwm0/period
+echo 0 > /sys/class/pwm/pwmchip0/pwm0/enable
+
+#set pwdn(led yellow)
+echo 36 > /sys/class/gpio/export
+echo out > /sys/class/gpio/gpio36/direction
+echo 1 > /sys/class/gpio/gpio36/value
+
+
+#
+sleep 1s
+echo 0 > /sys/class/gpio/gpio98/value
+echo 0 > /sys/class/gpio/gpio99/value
+

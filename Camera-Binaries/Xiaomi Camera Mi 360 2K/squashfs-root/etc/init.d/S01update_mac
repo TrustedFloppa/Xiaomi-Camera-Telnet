@@ -1,0 +1,13 @@
+#!/bin/sh
+
+#modify mac address 
+
+
+mac=`factory get mac`
+
+echo $mac
+
+sed -i '/^MacAddress/d' /etc/Wireless/RT2870STA/MT7601USTA.dat
+
+
+echo MacAddress=$mac >> /etc/Wireless/RT2870STA/MT7601USTA.dat

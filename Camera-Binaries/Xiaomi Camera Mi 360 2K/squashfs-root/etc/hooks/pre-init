@@ -1,0 +1,10 @@
+#!/bin/sh 
+#mount -t tmpfs tmpfs /run
+#mkdir -p /run/upper /run/new_root /run/work
+#mount -t tmpfs tmpfs /run/work
+#mount -t overlay overlay -olowerdir=/,workdir=/run/work,upperdir=/run/upper /run/new_root
+#mkdir -p /run/new_root/old_root
+#cd /run/new_root
+#pivot_root . old_root
+#mount -omove old_root/dev dev
+
